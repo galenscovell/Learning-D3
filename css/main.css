@@ -1,8 +1,11 @@
 
-html, body {
+html, 
+body {
     width: 100%;
     margin: 0px;
     padding: 0px;
+    background-color: #f3f3f3;
+    font-family: "Roboto", sans-serif;
 }
 
 #buttons {
@@ -16,31 +19,30 @@ html, body {
     display: inline-block;
     height: 50px;
     width: 180px;
-    background-color: #f3f3f3;
+    background-color: white;
     line-height: 46px;
-    font-family: "Roboto", sans-serif;
     font-size: 18px;
     color: rgba(52, 152, 219, 1);
-    border: 2px solid rgba(52, 152, 219, 1);
-    border-radius: 1px;
-    transition: all 0.2s ease;
+    border: 1px solid rgba(52, 152, 219, 1);
+    border-radius: 2px;
+    transition: all 0.1s ease;
 }
 
 #update-barchart:hover,
 #update-scatterplot:hover {
-    color: #f3f3f3;
+    color: white;
     background-color: rgba(52, 152, 219, 1);
     cursor: pointer;
 }
 
-#barchart, #scatterplot {
-    border: 1px solid gray;
+#barchart, 
+#scatterplot {
+    border: 1px solid rgba(60, 60, 60, 0.2);
     height: 300px;
     width: 80%;
     margin: 10px auto;
     padding: 5px;
-    background-color: #f3f3f3;
-    font-family: "Roboto", sans-serif;
+    background-color: white;
 }
 
 .axis path,
@@ -51,6 +53,5 @@ html, body {
 }
 
 .axis text {
-    font-family: "Roboto", sans-serif;
     font-size: 11px;
 }
