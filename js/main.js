@@ -163,15 +163,25 @@ function buildScatterplot() {
                 .attr("width", containerWidth)
                 .attr("height", containerHeight);
 
-    svg.selectAll("circle").data(dataset).enter().append("circle")
-        .attr("cx", function(dval) {
-            return xScale(dval[0]);
-        })
-        .attr("cy", function(dval) {
-            return yScale(dval[1]);
-        })
-        .attr("r", 5)
-        .attr("fill", "rgb(26, 188, 156)");
+    //Define clipping path
+    svg.append("clipPath").attr("id", "scatterplot-area").append("rect")
+        .attr("x", padding)
+        .attr("y", padding)
+        .attr("width", containerWidth- padding * 3)
+        .attr("height", containerHeight - padding * 2);
+
+    svg.append("g")
+        .attr("id", "circles")
+        .attr("clip-path", "url(#scatterplot-area)")
+        .selectAll("circle").data(dataset).enter().append("circle")
+            .attr("cx", function(dval) {
+                return xScale(dval[0]);
+            })
+            .attr("cy", function(dval) {
+                return yScale(dval[1]);
+            })
+            .attr("r", 5)
+            .attr("fill", "rgb(26, 188, 156)");
 
     svg.append("g")
         .attr("class", "x axis")
