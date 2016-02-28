@@ -5,12 +5,52 @@ html, body {
     padding: 0px;
 }
 
+#buttons {
+    width: 80%;
+    margin: 10px auto 0 auto;
+    text-align: center;
+}
+
+#update-barchart,
+#update-scatterplot {
+    display: inline-block;
+    height: 50px;
+    width: 180px;
+    background-color: #f3f3f3;
+    line-height: 46px;
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+    color: rgba(52, 152, 219, 1);
+    border: 2px solid rgba(52, 152, 219, 1);
+    border-radius: 1px;
+    transition: all 0.2s ease;
+}
+
+#update-barchart:hover,
+#update-scatterplot:hover {
+    color: #f3f3f3;
+    background-color: rgba(52, 152, 219, 1);
+    cursor: pointer;
+}
+
 #barchart, #scatterplot {
     border: 1px solid gray;
     height: 300px;
     width: 80%;
-    margin: 20px auto;
-    padding: 10px;
+    margin: 10px auto;
+    padding: 5px;
     background-color: #f3f3f3;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: "Roboto", sans-serif;
+    font-size: 11px;
 }

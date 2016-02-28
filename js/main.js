@@ -1,46 +1,79 @@
 
 
-function fromCsv(fname) {
+var barchartPresent = false;
+var scatterplotPresent = false;
+
+
+$("#update-barchart").on("click", function(e) {
+    if (barchartPresent) {
+        d3.select("#barchart-svg").remove();
+    }
+    buildBarchart();
+    barchartPresent = true;
+});
+
+
+$("#update-scatterplot").on("click", function(e) {
+    if (scatterplotPresent) {
+        d3.select("#scatter-svg").remove();
+    }
+    buildScatterplot();
+    scatterplotPresent = true;
+});
+
+
+function pullDataFromCsv(fname) {
     loadedData = d3.csv(fname, function(data) {
-        console.log(data);
+        return data;
     });
 }
 
-function buildBarChart() {
+
+function createRandomData() {
+    var dataset = [];
+    var numPoints = 50;
+    var xRange = Math.random() * 1000;
+    var yRange = Math.random() * 1000;
+
+    for (var i = 0; i < numPoints; i++) {
+        var x = Math.floor(Math.random() * xRange);
+        var y = Math.floor(Math.random() * yRange);
+        dataset.push([x, y]);
+    }
+
+    return dataset;
+}
+
+
+function buildBarchart() {
     var containerWidth = $("#barchart").width();
     var containerHeight = $("#barchart").height();
     var barPadding = 2;
     
     var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
-                    11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+                   11, 12, 15, 20, 18, 17, 16, 18, 23, 25];
 
-    var svg = d3.select("div#barchart")
-                .append("svg")
+    var svg = d3.select("div#barchart").append("svg")
+                .attr("id", "barchart-svg")
                 .attr("width", containerWidth)
                 .attr("height", containerHeight);
 
-    svg.selectAll("rect")  // Get all rects in svg -- none exist yet! returns empty selection
-        .data(dataset)     // Check the dataset for number of entries
-        .enter()           // Hand datapoints to enter()
-        .append("rect")    // Create and insert rect for each datapoint
+    svg.selectAll("rect").data(dataset).enter().append("rect")
         .attr("x", function(dval, idx) { 
-            return idx * (containerWidth / dataset.length);  // Set each bar start x
+            return idx * (containerWidth / dataset.length);
         })
         .attr("y", function(dval) {
-            return containerHeight - (dval * 10);            // Set each bar start y (starting from top)
+            return containerHeight - (dval * 10);
         })
-        .attr("width", containerWidth / dataset.length - barPadding)  // Set each bar width
+        .attr("width", containerWidth / dataset.length - barPadding)
         .attr("height", function(dval) {
-            return dval * 10;                                         // Set each bar height
+            return dval * 10;
         })
         .attr("fill", function(dval) {
-            return "rgb(0, 120, " + (dval * 10) + ")";  // Set bar colors depending on datapoint value
+            return "rgb(0, 120, " + (dval * 10) + ")";
         });
 
-    svg.selectAll("text")
-        .data(dataset)
-        .enter()
-        .append("text")
+    svg.selectAll("text").data(dataset).enter().append("text")
         .text(function(dval) {
             return dval;
         })
@@ -62,47 +95,37 @@ function buildScatterplot() {
     var containerHeight = $("#scatterplot").height();
     var padding = 40;
 
+    // Create dataset
+    var dataset = createRandomData();
+
+    // Construct scales
     var xScale = d3.scale.linear()
-                            .domain([0, 580])
-                            .range([padding, containerWidth - padding])
+                            .domain([0, d3.max(dataset, function(d) { return d[0]; })])
+                            .range([padding, containerWidth - padding * 2]);
     var yScale = d3.scale.linear()
-                            .domain([0, 200])
-                            .range([containerHeight - padding, padding])
+                            .domain([0, d3.max(dataset, function(d) { return d[1]; })])
+                            .range([containerHeight - padding, padding]);
     var rScale = d3.scale.linear()
-                            .domain([0, 580])
-                            .range([6, 60])
+                            .domain([0, d3.max(dataset, function(d) { return d[1]; })])
+                            .range([2, 10]);
 
-    var dataset = [
-                  [1, 40],
-                  [500, 20],
-                  [10, 20],
-                  [480, 90],
-                  [250, 70],
-                  [100, 200],
-                  [330, 95],
-                  [410, 120],
-                  [475, 44],
-                  [530, 55],
-                  [550, 10],
-                  [480, 20],
-                  [580, 90],
-                  [25, 67],
-                  [85, 21],
-                  [220, 88],
-                  [30, 100],
-                  [200, 60],
-                  [80, 140]
-              ];
+    // Construct axes
+    var xAxis = d3.svg.axis()
+                        .scale(xScale)
+                        .orient("bottom")
+                        .ticks(5);
+    var yAxis = d3.svg.axis()
+                        .scale(yScale)
+                        .orient("left")
+                        .ticks(5);
 
-    var svg = d3.select("div#scatterplot")
-                .append("svg")
+    var svg = d3.select("div#scatterplot").append("svg")
+                .attr("id", "scatter-svg")
                 .attr("width", containerWidth)
                 .attr("height", containerHeight);
 
-    svg.selectAll("circle")
-        .data(dataset)
-        .enter()
-        .append("circle")
+    // Create elements
+    svg.selectAll("circle").data(dataset).enter().append("circle")
         .attr("cx", function(dval) {
             return xScale(dval[0]);
         })
@@ -115,10 +138,19 @@ function buildScatterplot() {
         .attr("fill", function(dval) {
             return "rgba(0, 100, 100, " + (dval[1] / 100) + ")";
         });
+
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0, " + (containerHeight - padding) + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + padding + ", 0)")
+        .call(yAxis);
 }
 
 
 $(document).ready(function() {
-    buildBarChart();
-    buildScatterplot();
+    
 });
