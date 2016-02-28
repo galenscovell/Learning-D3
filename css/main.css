@@ -5,11 +5,12 @@ html, body {
     padding: 0px;
 }
 
-#main-container {
+#barchart, #scatterplot {
     border: 1px solid gray;
-    height: 600px;
+    height: 300px;
     width: 80%;
-    margin: 30px auto;
+    margin: 20px auto;
+    padding: 10px;
     background-color: #f3f3f3;
     font-family: 'Roboto', sans-serif;
 }

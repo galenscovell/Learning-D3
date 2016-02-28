@@ -6,16 +6,15 @@ function fromCsv(fname) {
     });
 }
 
-
-$(document).ready(function() {
-    var containerWidth = $("#main-container").width();
-    var containerHeight = $("#main-container").height();
+function buildBarChart() {
+    var containerWidth = $("#barchart").width();
+    var containerHeight = $("#barchart").height();
     var barPadding = 4;
     
     var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
                     11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
 
-    var svg = d3.select("div#main-container")
+    var svg = d3.select("div#barchart")
                 .append("svg")
                 .attr("width", containerWidth)
                 .attr("height", containerHeight);
@@ -55,4 +54,51 @@ $(document).ready(function() {
         .attr("font-family", "Roboto")
         .attr("font-size", "14px")
         .attr("fill", "#f3f3f3")
+}
+
+
+function buildScatterplot() {
+    var containerWidth = $("#scatterplot").width();
+    var containerHeight = $("#scatterplot").height();
+
+    var dataset = [
+                  [ 10,     20 ],
+                  [ 480,   90 ],
+                  [ 250,   50 ],
+                  [ 100,   33 ],
+                  [ 330,   95 ],
+                  [ 410,   12 ],
+                  [ 475,   44 ],
+                  [ 25,    67 ],
+                  [ 85,    21 ],
+                  [ 220,   88 ]
+              ];
+
+    var svg = d3.select("div#scatterplot")
+                .append("svg")
+                .attr("width", containerWidth)
+                .attr("height", containerHeight);
+
+    svg.selectAll("circle")
+        .data(dataset)
+        .enter()
+        .append("circle")
+        .attr("cx", function(dval) {
+            return dval[0];
+        })
+        .attr("cy", function(dval) {
+            return dval[1];
+        })
+        .attr("r", function(dval) {
+            return dval[1] / 4;
+        })
+        .attr("fill", function(dval) {
+            return "rgba(0, 100, 100, " + (dval[1] / 100) + ")";
+        });
+}
+
+
+$(document).ready(function() {
+    buildBarChart();
+    buildScatterplot();
 });
