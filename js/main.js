@@ -9,7 +9,7 @@ function fromCsv(fname) {
 function buildBarChart() {
     var containerWidth = $("#barchart").width();
     var containerHeight = $("#barchart").height();
-    var barPadding = 4;
+    var barPadding = 2;
     
     var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
                     11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
@@ -45,7 +45,7 @@ function buildBarChart() {
             return dval;
         })
         .attr("x", function(dval, idx) {
-            return idx * (containerWidth / dataset.length) + barPadding * 4;
+            return idx * (containerWidth / dataset.length) + barPadding * 9;
         })
         .attr("y", function(dval) {
             return containerHeight - (dval * 10) + 20;
@@ -60,18 +60,38 @@ function buildBarChart() {
 function buildScatterplot() {
     var containerWidth = $("#scatterplot").width();
     var containerHeight = $("#scatterplot").height();
+    var padding = 40;
+
+    var xScale = d3.scale.linear()
+                            .domain([0, 580])
+                            .range([padding, containerWidth - padding])
+    var yScale = d3.scale.linear()
+                            .domain([0, 200])
+                            .range([containerHeight - padding, padding])
+    var rScale = d3.scale.linear()
+                            .domain([0, 580])
+                            .range([6, 60])
 
     var dataset = [
-                  [ 10,     20 ],
-                  [ 480,   90 ],
-                  [ 250,   50 ],
-                  [ 100,   33 ],
-                  [ 330,   95 ],
-                  [ 410,   12 ],
-                  [ 475,   44 ],
-                  [ 25,    67 ],
-                  [ 85,    21 ],
-                  [ 220,   88 ]
+                  [1, 40],
+                  [500, 20],
+                  [10, 20],
+                  [480, 90],
+                  [250, 70],
+                  [100, 200],
+                  [330, 95],
+                  [410, 120],
+                  [475, 44],
+                  [530, 55],
+                  [550, 10],
+                  [480, 20],
+                  [580, 90],
+                  [25, 67],
+                  [85, 21],
+                  [220, 88],
+                  [30, 100],
+                  [200, 60],
+                  [80, 140]
               ];
 
     var svg = d3.select("div#scatterplot")
@@ -84,13 +104,13 @@ function buildScatterplot() {
         .enter()
         .append("circle")
         .attr("cx", function(dval) {
-            return dval[0];
+            return xScale(dval[0]);
         })
         .attr("cy", function(dval) {
-            return dval[1];
+            return yScale(dval[1]);
         })
         .attr("r", function(dval) {
-            return dval[1] / 4;
+            return rScale(dval[1]);
         })
         .attr("fill", function(dval) {
             return "rgba(0, 100, 100, " + (dval[1] / 100) + ")";
